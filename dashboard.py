@@ -5,7 +5,7 @@ from math import cos, sin
 import cv2
 import me416_utilities as mu
 import numpy as np
-import robot_model
+import robot_model as robomod
 
 # Predefined arrow shape
 VERTICES_ARROW = np.array([[-20, 0, 20, 0], [20, -20, 20, 10]])
@@ -13,7 +13,7 @@ VERTICES_ARROW = np.array([[-20, 0, 20, 0], [20, -20, 20, 10]])
 def vertices_transform(vertices_input, theta, translation):
     """Applies a rigid transformation (rotation + translation) to a set of vertices."""
     rotation_mat = np.array([[cos(theta), -sin(theta)], [sin(theta), cos(theta)]])
-    vertices_output = rotation_mat @ vertices_input + translation
+    vertices_output = (rotation_mat @ vertices_input).T + translation.T
     return vertices_output
 
 
@@ -25,6 +25,7 @@ def polygon_draw(img, vertices):
         return
     # convert vertices to int type
     int_vertices = vertices.astype(int)
+    # reshape to valid input in polylines
     int_vertices = int_vertices.reshape((-1, 1, 2))
     cv2.polylines(img, [int_vertices], isClosed = True,color = (0,0,255), thickness = 5)
 
@@ -52,11 +53,8 @@ def dashboard_draw(theta_heading, speed_linear, speed_angular):
         raise FileNotFoundError("dashboard.png not found.")
 
     # Transform arrow shape
-    translation = np.array([[150], [140]])
+    translation = np.array([[250], [125]])
     transformed_vertices = vertices_transform(VERTICES_ARROW, theta_heading, translation)
-
-    # DEBUG by checking translation with red dot
-    #cv2.circle(img_dashboard, (int(translation[0]), int(translation[1])), 5, (0, 0, 255), -1)
 
     # Draw the arrow on the dashboard
     polygon_draw(img_dashboard, transformed_vertices)
@@ -95,10 +93,10 @@ class Odometry:
         """Updates the estimate of the heading angle using encoders and Euler’s method."""
         speed_left = self.encoder_left.get_speed() * self.k_encoder
         speed_right = self.encoder_right.get_speed() * self.k_encoder
-        self.speed_linear, self.speed_angular = robot_model.speeds_to_twist(speed_left, speed_right)
+        self.speed_linear, self.speed_angular = robomod.speeds_to_twist(speed_left, speed_right)
         state_z = np.array([0., 0., self.theta]) # only care about angle
         input_u = [self.speed_linear, self.speed_angular]
-        self.theta=self.theta+time_stepsize*robot_model.euler_step(state_z,input_u,time_stepsize)[-1]
+        self.theta = self.theta + time_stepsize * robomod.euler_step(state_z,input_u,time_stepsize)[-1]
 
 if __name__ == "__main__":
     odometry_dashboard()
