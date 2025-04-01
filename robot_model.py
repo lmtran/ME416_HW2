@@ -206,3 +206,5 @@ def speeds_to_twist_test():
         print('Test passed')
     else:
         print('Test passed')
+if __name__ =="__main__"
+    speed_to_twist_test()
