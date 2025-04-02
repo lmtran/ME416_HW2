@@ -74,7 +74,7 @@ def dashboard_draw(theta_heading, speed_linear, speed_angular):
 
     # Show the dashboard
     cv2.imshow('Dashboard', img_dashboard)
-    cv2.waitKey(0)
+    cv2.waitKey(1000) # wait 1000ms before closing window
     cv2.destroyAllWindows()
 
 
