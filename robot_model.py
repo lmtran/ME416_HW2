@@ -9,7 +9,7 @@ def model_parameters():
     # This is a stub. Write your code here.
     # return param_k, param_d
     param_k = 3.0  # A scaling factor for the linear speed.
-    param_d = 1.3  # A scaling factor for the angular speed.
+    param_d = 0.3  # A scaling factor for the angular speed.
     return param_k, param_d
 
 def speeds_to_twist(speed_left, speed_right):
@@ -207,5 +207,6 @@ def speeds_to_twist_test():
         print('Test passed')
     else:
         print('Test passed')
-if __name__ =="__main__": 
+
+if __name__ =="__main__":
     speeds_to_twist_test()
