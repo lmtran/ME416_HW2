@@ -8,8 +8,8 @@ def model_parameters():
     """Returns two constant model parameters"""
     # This is a stub. Write your code here.
     # return param_k, param_d
-    param_k = 1.0  # A scaling factor for the linear speed.
-    param_d = 1.0  # A scaling factor for the angular speed.
+    param_k = 3.0  # A scaling factor for the linear speed.
+    param_d = 1.3  # A scaling factor for the angular speed.
     return param_k, param_d
 
 def speeds_to_twist(speed_left, speed_right):
@@ -73,6 +73,7 @@ def twist_to_speeds(speed_linear, speed_angular,k=1.0,d=1.0):
     (forward at maximum speed).
     """
     # Apply the inverted relations
+    k, d = model_parameters()
     speed_left = (1 / k) * speed_linear - (d / k) * speed_angular
     speed_right = (1 / k) * speed_linear + (d / k) * speed_angular
     speed_left = max(-1.0, min(1.0, speed_left))
@@ -207,4 +208,4 @@ def speeds_to_twist_test():
     else:
         print('Test passed')
 if __name__ =="__main__": 
-    speed_to_twist_test()
+    speeds_to_twist_test()
