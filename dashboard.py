@@ -87,7 +87,7 @@ class Odometry:
         self.encoder_left = mu.QuadEncoderLeft()
         self.encoder_right = mu.QuadEncoderRight()
         self.theta = 0.0
-        self.k_encoder = 1.0e-3
+        self.k_encoder = 1.0e-4
 
     def step(self, time_stepsize):
         """Updates the estimate of the heading angle using encoders and Euler’s method."""
